@@ -17,10 +17,13 @@ let dynamodb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
  * @param usersTableName name of the table referring to the users
  * @param options OPTIONAL - config for AWS.config.update.
  */
-export function config(usersTableName: string, options?:AWS.ConfigurationOptions & ConfigurationServicePlaceholders & APIVersions) {
+export function config(
+  usersTableName: string,
+  options?: AWS.ConfigurationOptions & ConfigurationServicePlaceholders & APIVersions,
+) {
   usersTable = usersTableName;
 
-  if(typeof options !== 'undefined') {
+  if (typeof options !== 'undefined') {
     AWS.config.update(options);
     dynamodb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
   }
@@ -60,14 +63,14 @@ export function getUser(id: string): Promise<User> {
 }
 
 /**
- * 
+ *
  * @param email user's email
  * @param name user's name
  * @param hash password hash
  * @param salt salt in password hash
  * @returns promise from dynamodb.putItem resolving in PutItemOutput or rejecting in AWSError
  */
-export function putNewUser(email: string, name: string, hash:string, salt:string): Promise<any> {
+export function putNewUser(email: string, name: string, hash: string, salt: string): Promise<any> {
   const dynamoItem = attr.wrap({ id: email, name, hash, salt });
 
   const params: PutItemInput = {
