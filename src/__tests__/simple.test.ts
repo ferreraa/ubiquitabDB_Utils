@@ -41,7 +41,7 @@ test('put and get same user', async () => {
                                               testPut.testSalt);
     console.log(data);
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 
   try {
@@ -49,6 +49,6 @@ test('put and get same user', async () => {
     expect(user.email).toBe(testPut.testEMail);
     expect(user.name).toBe(testPut.testName);
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 });
