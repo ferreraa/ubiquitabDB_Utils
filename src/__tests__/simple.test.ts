@@ -1,6 +1,20 @@
 import { describe, expect, test } from '@jest/globals';
 import * as dynamodbUtils from '../index';
 
+
+require('dotenv').config();
+
+if (typeof process.env.AKI === 'undefined' || typeof process.env.SAK === 'undefined') {
+  console.error('AKI or SAK undefined as environment variable');
+}
+
+dynamodbUtils.config('Users_dev', {
+  region: "eu-west-3",
+  accessKeyId: process.env.AKI,
+  secretAccessKey: process.env.SAK
+})
+
+
 function makeid(length: Number): string {
   var result = '';
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
