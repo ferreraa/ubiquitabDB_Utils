@@ -68,7 +68,7 @@ export function getUser(id: string): Promise<User> {
  * @returns promise from dynamodb.putItem resolving in PutItemOutput or rejecting in AWSError
  */
 export function putNewUser(email: string, name: string, hash:string, salt:string): Promise<any> {
-  const dynamoItem = attr.wrap({ id: email, name: name, hash: hash, salt: salt });
+  const dynamoItem = attr.wrap({ id: email, name, hash, salt });
 
   const params: PutItemInput = {
     Item: dynamoItem,
