@@ -27,14 +27,14 @@ export function config(usersTableName: string, options?:AWS.ConfigurationOptions
 }
 
 /**
- * @param name unique name of the user
+ * @param id unique email of the user
  * @returns Promise resolving in the corresponding User or null if none exist
  */
-export function getUser(name: string): Promise<User> {
+export function getUser(id: string): Promise<User> {
   const params: GetItemInput = {
     Key: {
       id: {
-        S: name,
+        S: id,
       },
     },
     TableName: usersTable,
@@ -50,21 +50,25 @@ export function getUser(name: string): Promise<User> {
 
       if (Object.keys(data).length !== 0) {
         const res = attr.unwrap(data.Item);
-        const user = new User(res.id);
+        const user = new User(res.id, res.name);
         resolve(user);
       } else {
-        reject(new Error(`user ${name} doesn't exist`));
+        reject(new Error(`user ${id} doesn't exist`));
       }
     });
   });
 }
 
 /**
- *
- * @param name name of the new user. This name must be unique in the database
+ * 
+ * @param email user's email
+ * @param name user's name
+ * @param hash password hash
+ * @param salt salt in password hash
+ * @returns promise from dynamodb.putItem resolving in PutItemOutput or rejecting in AWSError
  */
-export function putNewUser(name: string): Promise<any> {
-  const dynamoItem = attr.wrap({ id: name });
+export function putNewUser(email: string, name: string, hash:string, salt:string): Promise<any> {
+  const dynamoItem = attr.wrap({ id: email, name: name, hash: hash, salt: salt });
 
   const params: PutItemInput = {
     Item: dynamoItem,

@@ -25,20 +25,29 @@ function makeid(length: Number): string {
   return result;
 }
 
-const testName = makeid(10);
-console.log('test name: ', testName);
+const testPut = {
+  testEMail: makeid(10) + '@google.com',
+  testName: makeid(10),
+  testHash: makeid(256),
+  testSalt: makeid(20),  
+}
+console.log('test put: ', testPut);
 
 test('put and get same user', async () => {
   try {
-    let data = await dynamodbUtils.putNewUser(testName);
+    let data = await dynamodbUtils.putNewUser(testPut.testEMail,
+                                              testPut.testName,
+                                              testPut.testHash,
+                                              testPut.testSalt);
     console.log(data);
   } catch (error) {
     console.error(error);
   }
 
   try {
-    let user = await dynamodbUtils.getUser(testName);
-    expect(user.name).toBe(testName);
+    let user = await dynamodbUtils.getUser(testPut.testEMail);
+    expect(user.email).toBe(testPut.testEMail);
+    expect(user.name).toBe(testPut.testName);
   } catch (error) {
     console.error(error);
   }
