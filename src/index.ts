@@ -53,7 +53,7 @@ export function getUser(id: string): Promise<User> {
 
       if (Object.keys(data).length !== 0) {
         const res = attr.unwrap(data.Item);
-        const user = new User(res.id, res.name);
+        const user = new User(res.id, res.name, res.hash, res.salt);
         resolve(user);
       } else {
         reject(new Error(`user ${id} doesn't exist`));
