@@ -1,29 +1,30 @@
 // installed modules
 import * as AWS from 'aws-sdk';
 import { GetItemInput, PutItemInput } from 'aws-sdk/clients/dynamodb';
+import { APIVersions } from 'aws-sdk/lib/config';
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 const attr = require('dynamodb-data-types').AttributeValue;
 
 // my modules
 import { User } from './user';
 
-let usersTable = 'Users';
+let usersTable: string;
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-  usersTable = 'Users_dev';
+let dynamodb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+
+/**
+ * configures the DynamoDB connection
+ * @param usersTableName name of the table referring to the users
+ * @param options OPTIONAL - config for AWS.config.update.
+ */
+export function config(usersTableName: string, options?:AWS.ConfigurationOptions & ConfigurationServicePlaceholders & APIVersions) {
+  usersTable = usersTableName;
+
+  if(typeof options !== 'undefined') {
+    AWS.config.update(options);
+    dynamodb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
+  }
 }
-
-if (typeof process.env.AKI === 'undefined' || typeof process.env.SAK === 'undefined') {
-  console.error('AKI or SAK undefined as environment variable');
-}
-
-AWS.config.update({
-  region: 'eu-west-3',
-  accessKeyId: process.env.AKI,
-  secretAccessKey: process.env.SAK,
-});
-
-const dynamodb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 
 /**
  * @param name unique name of the user
