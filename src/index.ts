@@ -7,6 +7,7 @@ const attr = require('dynamodb-data-types').AttributeValue;
 
 // my modules
 import { User } from './user';
+export { User };
 
 let usersTable: string;
 
