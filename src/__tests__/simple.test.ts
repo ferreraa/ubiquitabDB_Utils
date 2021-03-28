@@ -25,16 +25,8 @@ function makeid(length: Number): string {
 }
 
 function testUserGenerator() {
-  return new User(
-    makeid(20),
-    makeid(10) + '@google.com',
-    makeid(10),
-    makeid(256),
-    makeid(20),
-  );
+  return new User(makeid(20), makeid(10) + '@google.com', makeid(10), makeid(256), makeid(20));
 }
-
-
 
 test('put and get same user', async () => {
   const testUser = testUserGenerator();
@@ -58,9 +50,8 @@ test('put and get same user', async () => {
 });
 
 test('get nonexistant user', async () => {
-  let user = testUserGenerator(); 
-  await dynamodbUtils.getUser(user.email).catch(e => {
+  let user = testUserGenerator();
+  await dynamodbUtils.getUser(user.email).catch((e) => {
     expect(e).toEqual(new Error(`query over ${user.email} returned no Items`));
   });
-  
 });

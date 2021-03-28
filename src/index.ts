@@ -37,10 +37,10 @@ export function config(
 export function getUser(email: string): Promise<User> {
   const params: QueryInput = {
     ExpressionAttributeValues: {
-      ":email": { S: email }
+      ':email': { S: email },
     },
     IndexName: 'email-index',
-    KeyConditionExpression: "email = :email",
+    KeyConditionExpression: 'email = :email',
     TableName: usersTable,
   };
 
@@ -51,14 +51,14 @@ export function getUser(email: string): Promise<User> {
         return;
       }
 
-      if(typeof data.Items === "undefined" || data.Items.length === 0) {
+      if (typeof data.Items === 'undefined' || data.Items.length === 0) {
         reject(new Error(`query over ${email} returned no Items`));
         return;
       }
 
       const res = attr.unwrap(data.Items[0]);
       const user = new User(res.id, res.email, res.name, res.hash, res.salt);
-      resolve(user);  
+      resolve(user);
     });
   });
 }
