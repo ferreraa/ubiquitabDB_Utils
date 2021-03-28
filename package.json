@@ -2,7 +2,8 @@
   "name": "ubiquitab_db",
   "version": "1.2.0",
   "description": "Interface with ubiquitab's database",
-  "main": "src/index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
