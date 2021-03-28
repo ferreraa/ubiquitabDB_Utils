@@ -32,18 +32,14 @@ test('put and get same user', async () => {
   const testUser = testUserGenerator();
   console.log('test put: ', testUser);
   try {
-    let data = await dynamodbUtils.putNewUser(testUser);
+    await dynamodbUtils.putNewUser(testUser);
   } catch (error) {
     throw new Error(error);
   }
 
   try {
     let user = await dynamodbUtils.getUser(testUser.email);
-    expect(user.id).toBe(testUser.id);
-    expect(user.email).toBe(testUser.email);
-    expect(user.name).toBe(testUser.name);
-    expect(user.hash).toBe(testUser.hash);
-    expect(user).toBe(testUser);
+    expect(user).toEqual(testUser);
   } catch (error) {
     throw new Error(error);
   }
