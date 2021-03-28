@@ -25,7 +25,7 @@ function makeid(length: Number): string {
 }
 
 function testUserGenerator() {
-  return new User(makeid(20), makeid(10) + '@google.com', makeid(10), makeid(256), makeid(20));
+  return new User(makeid(20), makeid(10) + '@google.com', makeid(10), makeid(256));
 }
 
 test('put and get same user', async () => {
@@ -43,7 +43,7 @@ test('put and get same user', async () => {
     expect(user.email).toBe(testUser.email);
     expect(user.name).toBe(testUser.name);
     expect(user.hash).toBe(testUser.hash);
-    expect(user.salt).toBe(testUser.salt);
+    expect(user).toBe(testUser);
   } catch (error) {
     throw new Error(error);
   }

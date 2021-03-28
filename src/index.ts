@@ -57,7 +57,7 @@ export function getUser(email: string): Promise<User> {
       }
 
       const res = attr.unwrap(data.Items[0]);
-      const user = new User(res.id, res.email, res.name, res.hash, res.salt);
+      const user = new User(res.id, res.email, res.name, res.hash);
       resolve(user);
     });
   });
@@ -73,7 +73,6 @@ export function putNewUser(user: User): Promise<any> {
     email: user.email,
     name: user.name,
     hash: user.hash,
-    salt: user.salt,
   });
 
   const params: PutItemInput = {
