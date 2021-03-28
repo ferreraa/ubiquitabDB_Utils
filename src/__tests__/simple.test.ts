@@ -1,5 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import * as dynamodbUtils from '../index';
+import { User } from '../user';
 
 require('dotenv').config();
 
@@ -23,27 +24,43 @@ function makeid(length: Number): string {
   return result;
 }
 
-const testPut = {
-  testEMail: makeid(10) + '@google.com',
-  testName: makeid(10),
-  testHash: makeid(256),
-  testSalt: makeid(20),
-};
-console.log('test put: ', testPut);
+function testUserGenerator() {
+  return new User(
+    makeid(20),
+    makeid(10) + '@google.com',
+    makeid(10),
+    makeid(256),
+    makeid(20),
+  );
+}
+
+
 
 test('put and get same user', async () => {
+  const testUser = testUserGenerator();
+  console.log('test put: ', testUser);
   try {
-    let data = await dynamodbUtils.putNewUser(testPut.testEMail, testPut.testName, testPut.testHash, testPut.testSalt);
-    console.log(data);
+    let data = await dynamodbUtils.putNewUser(testUser);
   } catch (error) {
     throw new Error(error);
   }
 
   try {
-    let user = await dynamodbUtils.getUser(testPut.testEMail);
-    expect(user.email).toBe(testPut.testEMail);
-    expect(user.name).toBe(testPut.testName);
+    let user = await dynamodbUtils.getUser(testUser.email);
+    expect(user.id).toBe(testUser.id);
+    expect(user.email).toBe(testUser.email);
+    expect(user.name).toBe(testUser.name);
+    expect(user.hash).toBe(testUser.hash);
+    expect(user.salt).toBe(testUser.salt);
   } catch (error) {
     throw new Error(error);
   }
+});
+
+test('get nonexistant user', async () => {
+  let user = testUserGenerator(); 
+  await dynamodbUtils.getUser(user.email).catch(e => {
+    expect(e).toEqual(new Error(`query over ${user.email} returned no Items`));
+  });
+  
 });
